@@ -20,7 +20,10 @@ find_package(CUDAToolkit REQUIRED)
 add_library(cuda_vector_add src/vector_add.cu)
 target_include_directories(cuda_vector_add PUBLIC include)
 target_link_libraries(cuda_vector_add PUBLIC CUDA::cudart)
-set_target_properties(cuda_vector_add PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
+set_target_properties(cuda_vector_add PROPERTIES
+    CUDA_SEPARABLE_COMPILATION ON
+    CUDA_RESOLVE_DEVICE_SYMBOLS ON
+)
 
 include(CTest)
 if(BUILD_TESTING)
