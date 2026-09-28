@@ -6,17 +6,28 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
-    runs-on: [self-hosted, linux]
+    if: >
+      github.event_name == 'push' ||
+      github.event.pull_request.head.repo.full_name == github.repository
+
+    runs-on: [self-hosted, linux, x64, lab-linux-gpu]
+
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+
       - name: Configure
         run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
       - name: Build
         run: cmake --build build --parallel
+
       - name: Test
         run: ctest --test-dir build --output-on-failure
         env:
